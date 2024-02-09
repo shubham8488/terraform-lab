@@ -11,6 +11,10 @@ pool:
 
 steps:
 
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'sudo apt-get -y install zip'
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
