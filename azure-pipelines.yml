@@ -9,45 +9,78 @@ trigger:
 pool:
   name : self-hosted-agent-pool
 
-steps:
+stages:
+- stage: 'apply'
+  displayName: 'Provission the infrastructure'
+  jobs: 
+  - job: 'apply'
+    displayName: 'Provissioning job'
 
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'sudo apt-get -y install zip'
-- task: TerraformInstaller@1
-  inputs:
-    terraformVersion: 'latest'
+    steps:
 
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    backendServiceArm: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
-    backendAzureRmResourceGroupName: 'resource-group-1'
-    backendAzureRmStorageAccountName: 'mystorageaccount8488'
-    backendAzureRmContainerName: 'tfstate'
-    backendAzureRmKey: 'terraform.tfstate'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'sudo apt-get -y install zip'
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
 
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+        backendAzureRmResourceGroupName: 'resource-group-1'
+        backendAzureRmStorageAccountName: 'mystorageaccount8488'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'terraform.tfstate'
 
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
 
-steps:
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'destroy'
-    environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+
+- stage: 'destroy'
+  displayName: 'Destroy the infrastructure'
+  jobs: 
+  - job: 'destroy'
+    displayName: 'Destroying job'
+
+    steps:
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'sudo apt-get -y install zip'
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+        backendAzureRmResourceGroupName: 'resource-group-1'
+        backendAzureRmStorageAccountName: 'mystorageaccount8488'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'terraform.tfstate'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'destroy'
+        environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+
+    
