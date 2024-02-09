@@ -44,3 +44,10 @@ steps:
     provider: 'azurerm'
     command: 'apply'
     environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
+
+steps:
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'azurerm'
+    command: 'destroy'
+    environmentServiceNameAzureRM: 'Free Trial(2d3fea03-0818-45fc-bf19-0ceb1579d3e2)'
